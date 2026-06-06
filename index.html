@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureVault — File Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ═══════════════════════════════════════════════
+       DESIGN SYSTEM — SecureVault
+       Aesthetic: cyber-secure, precise, fast
+    ═══════════════════════════════════════════════ */
+    :root {
+      /* Color Palette */
+      --bg-base:      #07090f;
+      --bg-surface:   #0c0f1a;
+      --bg-elevated:  #111627;
+      --bg-hover:     #161d30;
+      --bg-selected:  #0e1f3d;
+
+      --border:       #1a2340;
+      --border-light: #223058;
+      --border-accent:#2a4a8a;
+
+      --text-primary: #e2e8f8;
+      --text-secondary:#8896b3;
+      --text-muted:   #4a5880;
+      --text-accent:  #4d9fff;
+      --text-green:   #3dd68c;
+      --text-orange:  #f5a623;
+      --text-red:     #ff6b6b;
+
+      --accent:       #2563eb;
+      --accent-glow:  rgba(37,99,235,.25);
+      --accent-dim:   rgba(37,99,235,.12);
+
+      --green:        #22c55e;
+      --green-dim:    rgba(34,197,94,.1);
+
+      /* Typography Scale */
+      --font-ui:   'Outfit', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+
+      --text-xs:   11px;
+      --text-sm:   12px;
+      --text-base: 13px;
+      --text-md:   14px;
+      --text-lg:   16px;
+      --text-xl:   20px;
+
+      /* Spacing Grid (4px base) */
+      --sp-1: 4px;
+      --sp-2: 8px;
+      --sp-3: 12px;
+      --sp-4: 16px;
+      --sp-5: 20px;
+      --sp-6: 24px;
+      --sp-8: 32px;
+
+      /* Radii */
+      --r-sm: 4px;
+      --r-md: 6px;
+      --r-lg: 10px;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 4px rgba(0,0,0,.4);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.5);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,.6);
+      --glow:      0 0 24px rgba(37,99,235,.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: var(--bg-base); color: var(--text-primary); font-family: var(--font-ui); font-size: var(--text-base); overflow: hidden; -webkit-font-smoothing: antialiased; }
+
+    /* ── SCAN-LINE TEXTURE ── */
+    body::after {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px);
+    }
+
+    /* ══════════════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════════════ */
+    #shell { height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── TOP BAR ── */
+    #topbar {
+      height: 52px; flex-shrink: 0;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 var(--sp-5);
+      gap: var(--sp-4);
+      position: relative; z-index: 10;
+    }
+    .topbar-logo {
+      display: flex; align-items: center; gap: var(--sp-2);
+      font-size: var(--text-md); font-weight: 700; letter-spacing: .04em;
+      color: var(--text-primary); white-space: nowrap;
+    }
+    .topbar-logo .logo-icon {
+      width: 28px; height: 28px; border-radius: var(--r-sm);
+      background: var(--accent); display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .topbar-logo .logo-sub { color: var(--text-muted); font-weight: 400; font-size: var(--text-sm); }
+
+    .topbar-divider { width: 1px; height: 24px; background: var(--border); flex-shrink: 0; }
+
+    /* Search */
+    #search-wrap {
+      flex: 1; max-width: 380px;
+      display: flex; align-items: center; gap: var(--sp-2);
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: var(--r-md); padding: 0 var(--sp-3);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    #search-wrap:focus-within { border-color: var(--border-accent); box-shadow: var(--glow); }
+    .search-icon { color: var(--text-muted); font-size: 13px; flex-shrink: 0; }
+    #search-input {
+      flex: 1; background: none; border: none; outline: none;
+      color: var(--text-primary); font-family: var(--font-mono); font-size: var(--text-sm);
+      padding: var(--sp-2) 0; caret-color: var(--text-accent);
+    }
+    #search-input::placeholder { color: var(--text-muted); }
+    #search-clear {
+      background: none; border: none; color: var(--text-muted); cursor: pointer;
+      font-size: 13px; padding: 2px 4px; border-radius: 3px; display: none;
+      transition: color .15s;
+    }
+    #search-clear:hover { color: var(--text-primary); }
+    #search-clear.visible { display: block; }
+
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: var(--sp-3); }
+    .status-pill {
+      display: flex; align-items: center; gap: var(--sp-1);
+      font-family: var(--font-mono); font-size: var(--text-xs);
+      color: var(--text-green); letter-spacing: .05em;
+    }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+
+    /* ── MAIN BODY ── */
+    #main { flex: 1; display: flex; overflow: hidden; }
+
+    /* ── EXPLORER PANEL ── */
+    #explorer {
+      width: 320px; flex-shrink: 0;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: var(--sp-3) var(--sp-4);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .panel-label {
+      font-size: var(--text-xs); font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--text-muted);
+    }
+    #item-count {
+      font-family: var(--font-mono); font-size: var(--text-xs);
+      color: var(--text-muted); background: var(--bg-elevated);
+      padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border);
+    }
+
+    #tree-scroll { flex: 1; overflow-y: auto; padding: var(--sp-2) 0; }
+
+    /* ── TREE ITEMS ── */
+    .tree-item {
+      display: flex; align-items: center; gap: var(--sp-2);
+      padding: 5px var(--sp-4);
+      cursor: pointer; user-select: none;
+      border-left: 2px solid transparent;
+      transition: background .1s, border-color .1s;
+      outline: none; position: relative;
+    }
+    .tree-item:hover { background: var(--bg-hover); }
+    .tree-item.focused { background: var(--bg-hover); border-left-color: var(--border-accent); }
+    .tree-item.selected {
+      background: var(--bg-selected);
+      border-left-color: var(--accent);
+    }
+    .tree-item.selected .item-name { color: var(--text-accent); }
+
+    /* indent per depth level */
+    .tree-item { padding-left: calc(var(--sp-4) + var(--depth, 0) * 16px); }
+
+    .item-toggle {
+      width: 14px; height: 14px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 10px;
+      transition: transform .15s;
+    }
+    .item-toggle.open { transform: rotate(90deg); }
+    .item-toggle.leaf { opacity: 0; pointer-events: none; }
+
+    .item-icon { font-size: 14px; flex-shrink: 0; line-height: 1; }
+
+    .item-name {
+      flex: 1; font-size: var(--text-sm); color: var(--text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      transition: color .1s;
+    }
+    .item-name mark {
+      background: rgba(37,99,235,.3); color: var(--text-accent);
+      border-radius: 2px; padding: 0 1px;
+    }
+
+    .item-size {
+      font-family: var(--font-mono); font-size: var(--text-xs);
+      color: var(--text-muted); flex-shrink: 0;
+    }
+
+    .tree-children { overflow: hidden; }
+    .tree-children.collapsed { display: none; }
+
+    /* no-results */
+    #no-results {
+      display: none; padding: var(--sp-8) var(--sp-4);
+      text-align: center; color: var(--text-muted);
+      font-size: var(--text-sm); font-family: var(--font-mono);
+    }
+    #no-results.show { display: block; }
+
+    /* ── CONTENT AREA ── */
+    #content {
+      flex: 1; display: flex; flex-direction: column;
+      background: var(--bg-base); overflow: hidden;
+    }
+
+    /* Breadcrumb */
+    #breadcrumb {
+      padding: var(--sp-3) var(--sp-5);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: var(--sp-1);
+      font-family: var(--font-mono); font-size: var(--text-xs);
+      color: var(--text-muted); flex-shrink: 0; flex-wrap: wrap;
+      min-height: 40px;
+    }
+    .bc-seg { color: var(--text-secondary); }
+    .bc-sep { color: var(--text-muted); }
+    .bc-current { color: var(--text-accent); }
+
+    /* Empty / welcome state */
+    #welcome {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: var(--sp-3);
+      color: var(--text-muted);
+    }
+    .welcome-icon { font-size: 48px; opacity: .3; }
+    .welcome-text { font-size: var(--text-sm); font-family: var(--font-mono); }
+    .welcome-hint { font-size: var(--text-xs); opacity: .6; }
+
+    /* ── PROPERTIES PANEL ── */
+    #props-panel {
+      width: 260px; flex-shrink: 0;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform .22s cubic-bezier(.4,0,.2,1);
+    }
+    #props-panel.open { transform: translateX(0); }
+
+    .props-header {
+      padding: var(--sp-3) var(--sp-4);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .props-body { flex: 1; padding: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-4); overflow-y: auto; }
+
+    .file-preview-icon {
+      width: 64px; height: 64px; border-radius: var(--r-lg);
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; margin: 0 auto var(--sp-2);
+    }
+
+    .props-section { display: flex; flex-direction: column; gap: var(--sp-2); }
+    .props-section-title {
+      font-size: var(--text-xs); font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--text-muted);
+      padding-bottom: var(--sp-1); border-bottom: 1px solid var(--border);
+    }
+    .prop-row { display: flex; flex-direction: column; gap: 3px; }
+    .prop-key { font-size: var(--text-xs); color: var(--text-muted); font-family: var(--font-mono); }
+    .prop-val {
+      font-size: var(--text-sm); color: var(--text-primary);
+      font-family: var(--font-mono); word-break: break-all;
+    }
+    .prop-val.accent { color: var(--text-accent); }
+    .prop-val.green  { color: var(--text-green); }
+
+    /* ── PATH COPY BUTTON (Wildcard feature) ── */
+    .copy-path-btn {
+      margin-top: auto;
+      display: flex; align-items: center; justify-content: center; gap: var(--sp-2);
+      padding: var(--sp-2) var(--sp-3);
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: var(--r-md); cursor: pointer; color: var(--text-secondary);
+      font-family: var(--font-mono); font-size: var(--text-xs);
+      transition: all .15s; width: 100%;
+    }
+    .copy-path-btn:hover { border-color: var(--border-accent); color: var(--text-accent); background: var(--accent-dim); }
+    .copy-path-btn.copied { border-color: var(--green); color: var(--text-green); background: var(--green-dim); }
+
+    /* ── KEYBOARD HINT BAR ── */
+    #kbd-bar {
+      height: 28px; flex-shrink: 0;
+      background: var(--bg-surface); border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: var(--sp-4);
+      padding: 0 var(--sp-5);
+    }
+    .kbd-hint { display: flex; align-items: center; gap: var(--sp-1); }
+    kbd {
+      font-family: var(--font-mono); font-size: 9px;
+      background: var(--bg-elevated); border: 1px solid var(--border-light);
+      border-radius: 3px; padding: 1px 5px; color: var(--text-secondary);
+    }
+    .kbd-desc { font-size: var(--text-xs); color: var(--text-muted); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+  </style>
+</head>
+<body>
+<div id="shell">
+
+  <!-- TOP BAR -->
+  <header id="topbar">
+    <div class="topbar-logo">
+      <div class="logo-icon">🔐</div>
+      <span>SecureVault</span>
+      <span class="logo-sub">/ Explorer</span>
+    </div>
+    <div class="topbar-divider"></div>
+    <div id="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input id="search-input" type="text" placeholder="Search files and folders..." autocomplete="off" spellcheck="false" />
+      <button id="search-clear" title="Clear search">✕</button>
+    </div>
+    <div class="topbar-right">
+      <div class="status-pill"><div class="status-dot"></div>VAULT CONNECTED</div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- EXPLORER -->
+    <nav id="explorer" aria-label="File Explorer">
+      <div class="panel-header">
+        <span class="panel-label">Vault Contents</span>
+        <span id="item-count">—</span>
+      </div>
+      <div id="tree-scroll" tabindex="0" role="tree" aria-label="File tree">
+        <div id="tree-root"></div>
+        <div id="no-results">No results found</div>
+      </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <div id="content">
+      <div id="breadcrumb" aria-label="Path"></div>
+      <div id="welcome">
+        <div class="welcome-icon">🗂</div>
+        <div class="welcome-text">Select a file to inspect</div>
+        <div class="welcome-hint">Use ↑ ↓ to navigate · Enter to select · → ← to expand</div>
+      </div>
+    </div>
+
+    <!-- PROPERTIES -->
+    <aside id="props-panel" aria-label="File Properties">
+      <div class="props-header">
+        <span class="panel-label">Properties</span>
+      </div>
+      <div class="props-body" id="props-body"></div>
+    </aside>
+
+  </div>
+
+  <!-- KEYBOARD HINT BAR -->
+  <div id="kbd-bar">
+    <div class="kbd-hint"><kbd>↑</kbd><kbd>↓</kbd><span class="kbd-desc">Navigate</span></div>
+    <div class="kbd-hint"><kbd>→</kbd><span class="kbd-desc">Expand</span></div>
+    <div class="kbd-hint"><kbd>←</kbd><span class="kbd-desc">Collapse</span></div>
+    <div class="kbd-hint"><kbd>Enter</kbd><span class="kbd-desc">Select file</span></div>
+    <div class="kbd-hint"><kbd>/</kbd><span class="kbd-desc">Search</span></div>
+  </div>
+
+</div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
