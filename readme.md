@@ -6,7 +6,8 @@ A modern, high-performance file explorer UI for enterprise cloud storage. Built 
 
 ## Live Demo
 
-> 🔗 [Add your deployment link here]
+> secure-vault-jbrp.vercel.app
+
 
 ---
 
@@ -18,28 +19,30 @@ A modern, high-performance file explorer UI for enterprise cloud storage. Built 
 
 ## Overview
 
-SecureVault Dashboard is a Visual File Explorer built for the AmaliTech DEG Project based Challenge. The client, SecureVault Inc., provides high security cloud storage for law firms and banks. Their existing frontend was a flat list that made navigating nested case files frustrating and error prone.
+SecureVault Dashboard is a Visual File Explorer built for the AmaliTech DEG Project-based Challenge. The client, SecureVault Inc., provides high-security cloud storage for law firms and banks. Their existing frontend was a flat list that made navigating nested case files frustrating and error-prone.
 
-This project replaces it with a recursive, keyboard accessible, searchable file explorer built entirely from scratch with no component libraries.
+This project replaces it with a recursive, keyboard-accessible, searchable file explorer — built entirely from scratch with no component libraries.
+
+---
 
 ## Features
 
 | Feature | Description |
 |---|---|
-| 🗂 Recursive File Tree | Renders any depth of nested folders from JSON |
-| 🖱 Expand / Collapse | Click any folder to expand or collapse its contents |
-| 📋 Properties Panel | Select a file to view its Name, Type, Size, Path, and Depth |
-| ⌨️ Keyboard Navigation | Full keyboard support  no mouse required |
-| 🔍 Search & Filter | Realtime search with auto expand and match highlighting |
-| ⎘ Copy Full Path | One click copy of the full folder path to clipboard |
+| Recursive File Tree | Renders any depth of nested folders from JSON |
+| Expand / Collapse | Click any folder to expand or collapse its contents |
+| Properties Panel | Select a file to view its Name, Type, Size, Path, and Depth |
+| Keyboard Navigation | Full keyboard support no mouse required |
+| Search & Filter | Real-time search with auto-expand and match highlighting |
+| Copy Full Path | One-click copy of the full folder path to clipboard |
 
 ---
 
 ## Tech Stack
 
-- **Vanilla JavaScript** : zero framework dependencies
-- **HTML5 & CSS3** : custom design system, no UI libraries
-- **Vite** : development server and production bundler
+- **Vanilla JavaScript (ES Modules)** zero framework dependencies
+- **HTML5 & CSS3** custom design system, no UI libraries
+- **Vite** development server and production bundler
 
 ---
 
@@ -54,7 +57,7 @@ This project replaces it with a recursive, keyboard accessible, searchable file 
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Immacule/secure-vault.git
+git clone https://github.com/your-username/secure-vault.git
 
 # 2. Navigate into the project
 cd secure-vault
@@ -114,10 +117,10 @@ function renderNodes(nodes, container, depth, ancestors) {
 ```
 
 **Why this works at any depth:**
-- The function never assumes a fixed level, it always passes `depth + 1` to itself
+- The function never assumes a fixed level — it always passes `depth + 1` to itself
 - Indentation is handled via a CSS variable `--depth` set per node: `padding-left: calc(16px + var(--depth) * 16px)`
 - The `ancestors` array tracks the full path from root to current node, enabling breadcrumb display and the Copy Path feature
-- Collapsed folders simply hide their `tree-children` wrapper via `display: none` the DOM is always fully built, making expand/collapse instant
+- Collapsed folders simply hide their `tree-children` wrapper via `display: none` — the DOM is always fully built, making expand/collapse instant
 
 ---
 
@@ -138,7 +141,7 @@ Keyboard state is managed through a `flatList` array in `state` — rebuilt on e
 
 ---
 
-## Wildcard Feature — Copy Full Path
+## Wildcard Feature Copy Full Path
 
 **Feature:** A "Copy Full Path" button in the Properties Panel that copies the complete folder path of the selected file to the clipboard with one click.
 
