@@ -33,7 +33,7 @@ This project replaces it with a recursive, keyboard-accessible, searchable file 
 | Expand / Collapse | Click any folder to expand or collapse its contents |
 | Properties Panel | Select a file to view its Name, Type, Size, Path, and Depth |
 | Keyboard Navigation | Full keyboard support no mouse required |
-| Search & Filter | Real-time search with auto-expand and match highlighting |
+| Search | Real-time search with auto-expand and match highlighting |
 | Copy Full Path | One-click copy of the full folder path to clipboard |
 
 ---
@@ -57,7 +57,7 @@ This project replaces it with a recursive, keyboard-accessible, searchable file 
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/secure-vault.git
+git clone https://github.com/Immacule/secure-vault.git
 
 # 2. Navigate into the project
 cd secure-vault
@@ -117,27 +117,10 @@ function renderNodes(nodes, container, depth, ancestors) {
 ```
 
 **Why this works at any depth:**
-- The function never assumes a fixed level — it always passes `depth + 1` to itself
+- The function never assumes a fixed level it always passes `depth + 1` to itself
 - Indentation is handled via a CSS variable `--depth` set per node: `padding-left: calc(16px + var(--depth) * 16px)`
 - The `ancestors` array tracks the full path from root to current node, enabling breadcrumb display and the Copy Path feature
-- Collapsed folders simply hide their `tree-children` wrapper via `display: none` — the DOM is always fully built, making expand/collapse instant
-
----
-
-## Keyboard Accessibility
-
-The explorer is fully navigable without a mouse:
-
-| Key | Action |
-|---|---|
-| `↑` / `↓` | Move focus up and down through visible items |
-| `→` | Expand a folder |
-| `←` | Collapse a folder |
-| `Enter` | Select a file / toggle a folder |
-| `/` | Jump focus to the search bar |
-| `Escape` | Clear search and return to tree |
-
-Keyboard state is managed through a `flatList` array in `state` — rebuilt on every render to contain only the currently visible items. This means arrow keys always skip collapsed children automatically.
+- Collapsed folders simply hide their `tree-children` wrapper via `display: none` the DOM is always fully built, making expand/collapse instant
 
 ---
 

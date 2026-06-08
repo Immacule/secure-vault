@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SecureVault — File Explorer</title>
+  <title>SecureVault -File Explorer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -74,7 +74,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; background: var(--bg-base); color: var(--text-primary); font-family: var(--font-ui); font-size: var(--text-base); overflow: hidden; -webkit-font-smoothing: antialiased; }
 
-    /* ── SCAN-LINE TEXTURE ── */
+    /* SCAN-LINE TEXTURE */
     body::after {
       content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
       background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px);
@@ -85,7 +85,7 @@
     ══════════════════════════════════════════════ */
     #shell { height: 100vh; display: flex; flex-direction: column; }
 
-    /* ── TOP BAR ── */
+    /* TOP BAR */
     #topbar {
       height: 52px; flex-shrink: 0;
       background: var(--bg-surface);
@@ -142,10 +142,10 @@
     .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
 
-    /* ── MAIN BODY ── */
+    /* MAIN BODY */
     #main { flex: 1; display: flex; overflow: hidden; }
 
-    /* ── EXPLORER PANEL ── */
+    /* EXPLORER PANEL */
     #explorer {
       width: 320px; flex-shrink: 0;
       background: var(--bg-surface);
@@ -171,7 +171,7 @@
 
     #tree-scroll { flex: 1; overflow-y: auto; padding: var(--sp-2) 0; }
 
-    /* ── TREE ITEMS ── */
+    /*  TREE ITEMS */
     .tree-item {
       display: flex; align-items: center; gap: var(--sp-2);
       padding: 5px var(--sp-4);
@@ -228,7 +228,7 @@
     }
     #no-results.show { display: block; }
 
-    /* ── CONTENT AREA ── */
+    /* CONTENT AREA */
     #content {
       flex: 1; display: flex; flex-direction: column;
       background: var(--bg-base); overflow: hidden;
@@ -257,7 +257,7 @@
     .welcome-text { font-size: var(--text-sm); font-family: var(--font-mono); }
     .welcome-hint { font-size: var(--text-xs); opacity: .6; }
 
-    /* ── PROPERTIES PANEL ── */
+    /* PROPERTIES PANEL*/
     #props-panel {
       width: 260px; flex-shrink: 0;
       background: var(--bg-surface);
@@ -297,7 +297,7 @@
     .prop-val.accent { color: var(--text-accent); }
     .prop-val.green  { color: var(--text-green); }
 
-    /* ── PATH COPY BUTTON (Wildcard feature) ── */
+    /* PATH COPY BUTTON (Wildcard feature) */
     .copy-path-btn {
       margin-top: auto;
       display: flex; align-items: center; justify-content: center; gap: var(--sp-2);
@@ -310,7 +310,7 @@
     .copy-path-btn:hover { border-color: var(--border-accent); color: var(--text-accent); background: var(--accent-dim); }
     .copy-path-btn.copied { border-color: var(--green); color: var(--text-green); background: var(--green-dim); }
 
-    /* ── KEYBOARD HINT BAR ── */
+    /* KEYBOARD HINT BAR */
     #kbd-bar {
       height: 28px; flex-shrink: 0;
       background: var(--bg-surface); border-top: 1px solid var(--border);
