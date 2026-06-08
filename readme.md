@@ -6,14 +6,14 @@ A modern, high-performance file explorer UI for enterprise cloud storage. Built 
 
 ## Live Demo
 
-> 🔗 secure-vault-jbrp.vercel.app
+> secure-vault-jbrp.vercel.app
 
 
 ---
 
 ## Design File
 
-> 🎨 [Add your Figma/Penpot link here]
+> https://design.penpot.app/#/view?file-id=86bdcaa1-299a-806a-8008-23a6c4a38231&page-id=86bdcaa1-299a-806a-8008-23a6c4a38232&section=interactions&index=0&share-id=86bdcaa1-299a-806a-8008-24de26362685
 
 ---
 
@@ -29,20 +29,20 @@ This project replaces it with a recursive, keyboard-accessible, searchable file 
 
 | Feature | Description |
 |---|---|
-| 🗂 Recursive File Tree | Renders any depth of nested folders from JSON |
-| 🖱 Expand / Collapse | Click any folder to expand or collapse its contents |
-| 📋 Properties Panel | Select a file to view its Name, Type, Size, Path, and Depth |
-| ⌨️ Keyboard Navigation | Full keyboard support — no mouse required |
-| 🔍 Search & Filter | Real-time search with auto-expand and match highlighting |
-| ⎘ Copy Full Path | One-click copy of the full folder path to clipboard |
+| Recursive File Tree | Renders any depth of nested folders from JSON |
+| Expand / Collapse | Click any folder to expand or collapse its contents |
+| Properties Panel | Select a file to view its Name, Type, Size, Path, and Depth |
+| Keyboard Navigation | Full keyboard support no mouse required |
+| Search & Filter | Real-time search with auto-expand and match highlighting |
+| Copy Full Path | One-click copy of the full folder path to clipboard |
 
 ---
 
 ## Tech Stack
 
-- **Vanilla JavaScript (ES Modules)** — zero framework dependencies
-- **HTML5 & CSS3** — custom design system, no UI libraries
-- **Vite** — development server and production bundler
+- **Vanilla JavaScript (ES Modules)** zero framework dependencies
+- **HTML5 & CSS3** custom design system, no UI libraries
+- **Vite** development server and production bundler
 
 ---
 
@@ -141,7 +141,7 @@ Keyboard state is managed through a `flatList` array in `state` — rebuilt on e
 
 ---
 
-## Wildcard Feature — Copy Full Path
+## Wildcard Feature Copy Full Path
 
 **Feature:** A "Copy Full Path" button in the Properties Panel that copies the complete folder path of the selected file to the clipboard with one click.
 
